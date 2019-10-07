@@ -40,10 +40,10 @@ def main(zFile, dictfile):
 def parse_arguments():
   parser=argparse.ArgumentParser(
     description='''Basic Zip File Password Cracker''',
-    usage='unzip.py [-h] -f <zipfile> -d <dictionary>',
+    usage='unzip.py [-h] -f <ZIPFILE> -d <DICTFILE>',
     epilog='-- Created by N4L.A')
-  parser.add_argument('-f', dest='zFile', type=str,  help='Specify ZIP file')
-  parser.add_argument('-d', dest='dictfile',type=str, help='Specify Dictionary file')
+  parser.add_argument('-f', '--file', dest='zFile', type=str,  help='Specify ZIP file')
+  parser.add_argument('-d', '--dict', dest='dictfile',type=str, help='Specify Dictionary file')
   args=parser.parse_args()
   if args.zFile == None or args.dictfile == None:
     print(parser.usage)
