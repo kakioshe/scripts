@@ -13,9 +13,8 @@ def tryPass(zFile, password):
       pass
 
 
-def argCheck():
-  if len(sys.argv) == 3:
-    files = sys.argv[1:]
+def argCheck(files):
+  if files:
     for file in files:
         if not os.path.isfile(file):
             print(file) + " Does not exist"
@@ -27,10 +26,11 @@ def argCheck():
     print(".zip File and Dictionary List are required. Use -h for help")
     exit(0)
 
-def main():
-  argCheck()
-  zFile = zipfile.ZipFile(sys.argv[1])
-  dictList = open(sys.argv[2])
+def main(zFile, dictfile):
+
+  argCheck([zFile, dictfile])
+  zFile = zipfile.ZipFile(zFile)
+  dictList = open(dictfile)
 
   for line in dictList.readlines():
     password = line.strip('\n')
@@ -39,13 +39,17 @@ def main():
 
 def parse_arguments():
   parser=argparse.ArgumentParser(
-    description='''Basic Zip File Password Cracker ''',
+    description='''Basic Zip File Password Cracker''',
+    usage='unzip.py [-h] -f <zipfile> -d <dictionary>',
     epilog='-- Created by N4L.A')
-  parser.add_argument('zipFile', nargs='+', help='ZIP file')
-  parser.add_argument('dictFile', nargs='+', help='Dictionary list file')
+  parser.add_argument('-f', dest='zFile', type=str,  help='Specify ZIP file')
+  parser.add_argument('-d', dest='dictfile',type=str, help='Specify Dictionary file')
   args=parser.parse_args()
-  return args
+  if args.zFile == None or args.dictfile == None:
+    print(parser.usage)
+    exit(0)
+  return args.zFile, args.dictfile
 
 if __name__ == '__main__':
-  arguments = parse_arguments()
-  main()
+  zFile, dictfile = parse_arguments()
+  main(zFile, dictfile)
