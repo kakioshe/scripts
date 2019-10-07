@@ -52,7 +52,7 @@ def main(passfile, dictfile):
 def parse_arguments():
   parser=argparse.ArgumentParser(
     description='''Basic Unix Decryptor''',
-    usage='unix_decryptor.py [-h] [-f --file PASSFILE] [-d --dict DICTFILE]',
+    usage='unix_decryptor.py [-h] -f <PASSFILE> -d <DICTFILE>',
     epilog='-- Created by N4L.A')
   parser.add_argument('-f', '--file', dest='passfile', type=str,  help='Specify password file')
   parser.add_argument('-d', '--dict', dest='dictfile',type=str, help='Specify Dictionary file')
