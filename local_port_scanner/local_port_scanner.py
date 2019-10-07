@@ -1,3 +1,4 @@
+import argparse
 import os
 import subprocess
 from shutil import which 
@@ -52,7 +53,6 @@ def printOutput(localDevices, localDeviceIp):
     print()
   print("Connected devices: ", end = '' )
   print(*localDeviceIp, sep = ', ')
-  print()
 
 
 def main():
@@ -69,6 +69,15 @@ def main():
 
   printOutput(localDevices, localDeviceIp)
 
+def parse_arguments():
+  parser=argparse.ArgumentParser(
+    description='''Local Network Port Scanner''',
+    usage='unix_decryptor.py [-h]',
+    epilog='-- Created by N4L.A')
+  args=parser.parse_args()
+    
+  return args
 
 if __name__ == "__main__":
+  args = parse_arguments()
   main()
