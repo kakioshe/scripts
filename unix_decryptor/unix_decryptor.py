@@ -4,9 +4,9 @@ import os
 import argparse
 from threading import Thread
 
-def passCheck(cryptPass):
+def passCheck(cryptPass, dictfile):
     salt = cryptPass[0:2]
-    dictFile = open(sys.argv[2],'r')
+    dictFile = open(dictfile,'r')
     result = []
     for word in dictFile.readlines():
         word = word.strip('\n')
@@ -18,12 +18,11 @@ def passCheck(cryptPass):
     t.join()
     print ("Password Not Found.\n") if not result else True
 
-def argCheck():
-  if len(sys.argv) == 3:
-    files = sys.argv[1:]
+def argCheck(files):
+  if files:
     for file in files:
         if not os.path.isfile(file):
-            print(file) + " Does not exist"
+            print((file) + " Does not exist")
             exit(0)
         if not os.access(file, os.R_OK):
             print(file + " Acess Denied")
@@ -39,27 +38,31 @@ def tryPass(cryptPass, word, salt, result):
         result.append(word)
         return word
             
+def main(passfile, dictfile):
+    argCheck([passfile, dictfile])
 
-def main():
-    argCheck()
-
-    passFile = open(sys.argv[1])
+    passFile = open(passfile)
     for line in passFile.readlines():
         if ":" in line:
             user = line.split(":")[0]
             cryptPass = line.split(":")[1].strip(' ').strip('\n')
             print("Cracking Password For: " + user)
-            passCheck(cryptPass)
+            passCheck(cryptPass, dictfile)
 
 def parse_arguments():
   parser=argparse.ArgumentParser(
     description='''Basic Unix Decryptor''',
+    usage='unix_decryptor.py [-h] [-f --file PASSFILE] [-d --dict DICTFILE]',
     epilog='-- Created by N4L.A')
-  parser.add_argument('PassFile', nargs='+', help='Encrypted Password List File')
-  parser.add_argument('dictFile', nargs='+', help='Dictionary list file')
+  parser.add_argument('-f', '--file', dest='passfile', type=str,  help='Specify password file')
+  parser.add_argument('-d', '--dict', dest='dictfile',type=str, help='Specify Dictionary file')
   args=parser.parse_args()
-  return args
+  if args.passfile == None or args.dictfile == None:
+    print(parser.usage)
+    exit(0)
+    
+  return args.passfile, args.dictfile
 
 if __name__ == '__main__':
-  arguments = parse_arguments()
-  main()
+  passfile, dictfile = parse_arguments()
+  main(passfile, dictfile)
